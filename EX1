@@ -1,0 +1,374 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>공연·콘서트 기획 — 나의 관심 분야</title>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700;900&family=Playfair+Display:ital,wght@0,700;0,900;1,700&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --lavender:       #c9b8e8;
+      --lavender-light: #e8dff8;
+      --lavender-pale:  #f3eeff;
+      --pink:           #f4b8ce;
+      --pink-light:     #fcd9e7;
+      --pink-pale:      #fff0f6;
+      --rose:           #e8a0bc;
+      --purple-deep:    #7c5cbf;
+      --purple-mid:     #9d7dd6;
+      --text-dark:      #3a2d5c;
+      --text-mid:       #6b548a;
+      --text-light:     #b39dcc;
+      --card-bg:        rgba(255,255,255,0.72);
+      --shadow:         0 8px 32px rgba(140,100,200,0.13);
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    body {
+      font-family: 'Noto Sans KR', sans-serif;
+      background: linear-gradient(135deg, #f3eeff 0%, #fff0f6 50%, #fce4f0 100%);
+      color: var(--text-dark);
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    /* BLOBS */
+    .blob { position: fixed; border-radius: 50%; filter: blur(80px); opacity: 0.32; pointer-events: none; z-index: 0; }
+    .blob-1 { width: 500px; height: 500px; background: var(--lavender); top: -150px; left: -150px; }
+    .blob-2 { width: 380px; height: 380px; background: var(--pink); bottom: 60px; right: -100px; }
+    .blob-3 { width: 240px; height: 240px; background: #d4b8f8; top: 50%; left: 55%; }
+
+    /* NAV */
+    nav {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 1rem 3rem;
+      background: rgba(255,255,255,0.6);
+      backdrop-filter: blur(18px);
+      border-bottom: 1px solid rgba(200,170,240,0.25);
+    }
+    .nav-logo {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.4rem; font-weight: 900;
+      background: linear-gradient(135deg, var(--purple-deep), var(--rose));
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+    }
+    .nav-back {
+      display: flex; align-items: center; gap: 0.5rem;
+      text-decoration: none; font-size: 0.85rem; font-weight: 500;
+      color: var(--text-mid); transition: color 0.2s;
+    }
+    .nav-back:hover { color: var(--purple-deep); }
+
+    /* HERO */
+    .hero {
+      position: relative; z-index: 1;
+      min-height: 92vh;
+      display: flex; flex-direction: column; align-items: center; justify-content: center;
+      text-align: center; padding: 8rem 2rem 5rem;
+    }
+    .hero-badge {
+      display: inline-block;
+      background: linear-gradient(135deg, var(--lavender-light), var(--pink-light));
+      color: var(--purple-deep); font-size: 0.75rem; font-weight: 700; letter-spacing: 0.18em;
+      padding: 0.4rem 1.3rem; border-radius: 999px; margin-bottom: 2rem;
+      border: 1px solid rgba(160,120,220,0.25);
+      animation: fadeUp 0.8s cubic-bezier(.22,1,.36,1) both;
+    }
+    .hero-title {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(2.6rem, 8vw, 5.5rem); font-weight: 900; line-height: 1.1;
+      background: linear-gradient(135deg, var(--purple-deep) 0%, #c97ab8 55%, var(--rose) 100%);
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+      margin-bottom: 1rem;
+      animation: fadeUp 0.8s 0.1s cubic-bezier(.22,1,.36,1) both;
+    }
+    .hero-sub {
+      font-size: clamp(0.95rem, 2.5vw, 1.2rem); font-weight: 300; color: var(--text-mid);
+      letter-spacing: 0.05em; margin-bottom: 2.5rem;
+      animation: fadeUp 0.8s 0.2s cubic-bezier(.22,1,.36,1) both;
+    }
+    .hero-quote {
+      max-width: 600px;
+      background: var(--card-bg);
+      backdrop-filter: blur(16px);
+      border: 1px solid rgba(200,160,240,0.22);
+      border-left: 4px solid var(--purple-mid);
+      border-radius: 1.2rem;
+      padding: 1.8rem 2rem;
+      font-size: 1rem; line-height: 1.9; color: var(--text-mid);
+      font-style: italic;
+      animation: fadeUp 0.8s 0.3s cubic-bezier(.22,1,.36,1) both;
+    }
+    .hero-scroll { margin-top: 4rem; animation: bounce 2s infinite; color: var(--text-light); font-size: 0.78rem; letter-spacing: 0.12em; }
+    .hero-scroll span { display: block; font-size: 1.3rem; }
+
+    /* SECTION */
+    section { position: relative; z-index: 1; padding: 5rem 2rem; }
+    .container { max-width: 900px; margin: 0 auto; }
+    .section-label { display: block; font-size: 0.7rem; font-weight: 700; letter-spacing: 0.28em; color: var(--purple-mid); text-transform: uppercase; margin-bottom: 0.6rem; }
+    .section-title { font-family: 'Playfair Display', serif; font-size: clamp(1.7rem, 4vw, 2.6rem); font-weight: 900; color: var(--text-dark); line-height: 1.25; margin-bottom: 1.5rem; }
+
+    /* PROSE BLOCK */
+    .prose {
+      background: var(--card-bg);
+      backdrop-filter: blur(16px);
+      border: 1px solid rgba(200,160,240,0.2);
+      border-radius: 2rem;
+      padding: 3rem 3.5rem;
+      box-shadow: var(--shadow);
+      margin-bottom: 2rem;
+    }
+    .prose p {
+      font-size: 1rem; line-height: 2; color: var(--text-mid);
+      margin-bottom: 1.4rem;
+    }
+    .prose p:last-child { margin-bottom: 0; }
+    .prose strong { color: var(--purple-deep); font-weight: 700; }
+
+    /* HIGHLIGHT CARDS */
+    .highlight-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 1.4rem;
+      margin: 3rem 0;
+    }
+    .h-card {
+      background: var(--card-bg);
+      backdrop-filter: blur(14px);
+      border: 1px solid rgba(200,160,240,0.22);
+      border-radius: 1.6rem;
+      padding: 2rem 1.8rem;
+      box-shadow: 0 4px 20px rgba(160,120,200,0.1);
+      transition: transform 0.25s, box-shadow 0.25s;
+    }
+    .h-card:hover { transform: translateY(-5px); box-shadow: 0 14px 40px rgba(140,100,200,0.17); }
+    .h-icon { font-size: 2.2rem; margin-bottom: 0.9rem; display: block; }
+    .h-title { font-weight: 700; font-size: 1rem; color: var(--text-dark); margin-bottom: 0.5rem; }
+    .h-desc { font-size: 0.85rem; line-height: 1.75; color: var(--text-mid); }
+
+    /* PULL QUOTE */
+    .pull-quote {
+      background: linear-gradient(135deg, var(--purple-deep), #b06aa8);
+      border-radius: 2rem;
+      padding: 3.5rem 4rem;
+      text-align: center;
+      color: white;
+      box-shadow: 0 12px 40px rgba(120,80,190,0.25);
+      margin: 3rem 0;
+    }
+    .pull-quote .q-mark { font-family: 'Playfair Display', serif; font-size: 5rem; line-height: 0.5; color: rgba(255,255,255,0.25); display: block; margin-bottom: 1rem; }
+    .pull-quote p { font-size: clamp(1rem, 2.5vw, 1.35rem); font-weight: 300; line-height: 1.8; letter-spacing: 0.02em; }
+    .pull-quote em { font-style: normal; font-weight: 700; color: var(--pink-light); }
+
+    /* DIVIDER */
+    .divider {
+      display: flex; align-items: center; gap: 1rem;
+      margin: 4rem 0 2rem;
+      color: var(--text-light); font-size: 0.75rem; letter-spacing: 0.15em;
+    }
+    .divider::before, .divider::after { content: ''; flex: 1; height: 1px; background: linear-gradient(90deg, transparent, rgba(180,140,230,0.3), transparent); }
+
+    /* CLOSING */
+    .closing {
+      background: linear-gradient(135deg, #f0e6ff, #ffe0f0);
+      border-radius: 2.5rem;
+      padding: 4rem 3.5rem;
+      text-align: center;
+      border: 1px solid rgba(200,160,240,0.2);
+      box-shadow: var(--shadow);
+    }
+    .closing-title {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(1.6rem, 4vw, 2.4rem);
+      font-weight: 900; color: var(--purple-deep);
+      margin-bottom: 1.2rem;
+    }
+    .closing-text { font-size: 0.97rem; line-height: 1.95; color: var(--text-mid); max-width: 600px; margin: 0 auto; }
+
+    /* FOOTER */
+    footer { position: relative; z-index: 1; text-align: center; padding: 2.5rem 2rem; border-top: 1px solid rgba(200,170,240,0.2); font-size: 0.8rem; color: var(--text-light); }
+    footer strong { color: var(--purple-mid); }
+
+    /* ANIMATIONS */
+    @keyframes fadeUp { from { opacity: 0; transform: translateY(28px); } to { opacity: 1; transform: translateY(0); } }
+    @keyframes bounce { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(8px); } }
+    .reveal { opacity: 0; transform: translateY(30px); transition: opacity 0.7s ease, transform 0.7s ease; }
+    .reveal.visible { opacity: 1; transform: translateY(0); }
+
+    @media (max-width: 768px) {
+      nav { padding: 1rem 1.4rem; }
+      section { padding: 3.5rem 1.2rem; }
+      .prose { padding: 2rem 1.6rem; }
+      .pull-quote { padding: 2.5rem 1.8rem; }
+      .closing { padding: 2.5rem 1.6rem; }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="blob blob-1"></div>
+  <div class="blob blob-2"></div>
+  <div class="blob blob-3"></div>
+
+  <nav>
+    <div class="nav-logo">엔터 산업 이야기</div>
+    <a class="nav-back" href="index.html">← 홈으로</a>
+  </nav>
+
+  <!-- HERO -->
+  <section class="hero">
+    <div class="hero-badge">MY INTEREST · 엔터 산업</div>
+    <h1 class="hero-title">공연·콘서트 기획</h1>
+    <p class="hero-sub">아티스트와 팬이 만나는 특별한 순간을 설계하다</p>
+    <blockquote class="hero-quote">
+      "공연은 단순한 이벤트가 아니라 사람들에게 오래 남는 추억과 감동을 만들어 주는 경험이다.
+      그리고 그 경험의 중심에는 <strong>공연·콘서트 기획</strong>이 있다."
+    </blockquote>
+    <div class="hero-scroll"><span>↓</span>READ MORE</div>
+  </section>
+
+  <!-- WHY -->
+  <section>
+    <div class="container">
+      <div class="reveal">
+        <span class="section-label">Why I Love It</span>
+        <h2 class="section-title">왜 공연·콘서트 기획인가</h2>
+      </div>
+
+      <div class="highlight-grid reveal">
+        <div class="h-card">
+          <span class="h-icon">🎭</span>
+          <div class="h-title">창의성 + 실행력</div>
+          <p class="h-desc">상상력만으로 끝나는 게 아니라 실제 현장에서 완성도 있게 구현하는 두 가지 능력이 모두 필요한 분야.</p>
+        </div>
+        <div class="h-card">
+          <span class="h-icon">🎇</span>
+          <div class="h-title">현장의 생동감</div>
+          <p class="h-desc">관객의 함성, 집중, 감동을 실시간으로 확인할 수 있는 엔터 산업에서 가장 현장감이 큰 분야.</p>
+        </div>
+        <div class="h-card">
+          <span class="h-icon">💜</span>
+          <div class="h-title">팬과의 소통</div>
+          <p class="h-desc">팬미팅·콘서트는 팬과 아티스트가 서로의 존재를 가장 깊이 느낄 수 있는 특별한 자리.</p>
+        </div>
+        <div class="h-card">
+          <span class="h-icon">🔦</span>
+          <div class="h-title">공간을 바꾸는 힘</div>
+          <p class="h-desc">조명, 음향, 영상, 무대 장치로 같은 공간도 완전히 다른 세계로 만들어내는 연출의 매력.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- BODY TEXT -->
+  <section>
+    <div class="container">
+      <div class="reveal">
+        <span class="section-label">Deep Dive</span>
+        <h2 class="section-title">공연이 만드는 특별한 경험</h2>
+      </div>
+
+      <div class="prose reveal">
+        <p>
+          엔터 산업에서 내가 가장 관심 있는 세부 분야는 <strong>공연·콘서트 기획</strong>이다.
+          공연·콘서트 기획은 콘서트, 팬미팅, 페스티벌과 같은 현장 이벤트를 준비하고 운영하는 분야로,
+          단순히 무대를 만드는 일을 넘어서 아티스트와 팬이 직접 만나는 특별한 순간을 설계하는 일이라고 생각한다.
+        </p>
+        <p>
+          내가 이 분야에 관심을 가지게 된 가장 큰 이유는 <strong>공연이 사람들에게 강한 감정과 기억을 남기는 공간</strong>이라고 생각하기 때문이다.
+          음악을 듣는 것만으로도 큰 감동을 받을 수 있지만, 공연장은 그 음악에 무대 연출, 조명, 음향, 영상, 퍼포먼스, 관객의 함성이 더해져
+          훨씬 더 특별한 경험을 만들어낸다.
+        </p>
+        <p>
+          무대의 순서가 어떻게 구성되는지, 어떤 조명을 사용하는지, 어떤 분위기로 시작해서 어떻게 마무리하는지에 따라
+          공연 전체의 인상이 달라지기 때문이다. 그래서 나는 공연·콘서트 기획이 단순히 이벤트를 준비하는 일이 아니라,
+          <strong>관객의 감정 흐름까지 고려해서 하나의 경험을 만드는 창의적인 일</strong>이라고 생각한다.
+        </p>
+      </div>
+
+      <div class="pull-quote reveal">
+        <span class="q-mark">"</span>
+        <p>
+          공연 기획은 단순히 <em>'보여주는 행사'</em>가 아니라<br />
+          관객과 함께 완성하는 <em>소통의 장</em>이다.
+        </p>
+      </div>
+
+      <div class="prose reveal">
+        <p>
+          또한 공연·콘서트 기획은 <strong>여러 요소가 유기적으로 연결되는 종합적인 분야</strong>라는 점에서 더욱 흥미롭다.
+          공연 하나가 성공적으로 진행되기 위해서는 아티스트의 콘셉트와 음악 스타일을 이해해야 하고,
+          무대 디자인과 조명, 음향, 영상 효과, 의상, 동선, 안전관리, 시간 운영까지 모두 고려해야 한다.
+        </p>
+        <p>
+          예를 들어 콘서트에서는 오프닝 무대를 어떻게 시작해야 관객의 집중도를 높일 수 있는지,
+          중간 멘트와 VCR은 어떤 흐름으로 배치해야 지루하지 않은지,
+          마지막 앙코르 무대에서는 어떤 연출이 <strong>가장 강한 여운을 남길 수 있는지</strong>까지 고민해야 한다.
+        </p>
+        <p>
+          팬과의 소통이라는 측면에서도 공연·콘서트 기획은 매우 중요한 의미를 가진다.
+          팬미팅에서는 토크 코너, 게임, Q&A, 무대 공연, 이벤트 영상 등 다양한 구성이 들어갈 수 있는데,
+          이런 요소를 어떻게 조합하느냐에 따라 행사의 분위기와 <strong>팬들의 기억이 달라진다.</strong>
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- RESPONSIBILITY -->
+  <section>
+    <div class="container">
+      <div class="divider reveal">RESPONSIBILITY & PASSION</div>
+
+      <div class="reveal">
+        <span class="section-label">The Real Work</span>
+        <h2 class="section-title">책임감이 곧 매력이다</h2>
+      </div>
+
+      <div class="prose reveal">
+        <p>
+          물론 공연·콘서트 기획은 재미있기만 한 일이 아니라 그만큼 <strong>책임감도 큰 분야</strong>라고 생각한다.
+          현장 이벤트는 많은 사람의 시간과 비용이 들어가며, 수많은 스태프와 장비, 관객이 함께 움직이기 때문에
+          작은 실수도 큰 문제로 이어질 수 있다.
+        </p>
+        <p>
+          일정 관리, 돌발 상황 대처, 안전 문제, 아티스트 컨디션, 관객 동선 같은 현실적인 문제를 꼼꼼하게 준비해야 한다.
+          하지만 오히려 이런 점 때문에 더 매력적으로 느껴진다. 단순히 상상만 하는 것이 아니라,
+          실제로 수많은 요소를 조율해 <strong>하나의 완성된 무대를 만들어낸다는 점</strong>에서 큰 성취감을 느낄 수 있기 때문이다.
+        </p>
+        <p>
+          공연이 성공적으로 끝났을 때 관객과 아티스트 모두가 만족하는 모습을 보면, 그 자체로 큰 보람이 있을 것이라고 생각한다.
+          조명을 강렬하게 사용하면 에너지가 넘치는 분위기가 되고, 따뜻한 색감과 잔잔한 영상 효과를 활용하면
+          감성적인 분위기가 만들어진다. 이처럼 공연 기획은 <strong>시각적·청각적 요소를 통해 현장의 공기를 바꾸고 분위기를 완성하는 일</strong>이다.
+        </p>
+      </div>
+
+      <!-- CLOSING -->
+      <div class="closing reveal" style="margin-top: 3rem;">
+        <div class="closing-title">🎤 결론</div>
+        <p class="closing-text">
+          내가 공연·콘서트 기획에 관심을 가지는 이유는 이 분야가
+          <strong>무대 연출의 창의성, 관객 반응을 직접 느낄 수 있는 현장성,
+          팬과 아티스트를 이어주는 소통의 역할, 분위기와 감정을 만들어내는 힘</strong>을
+          모두 갖추고 있기 때문이다.<br /><br />
+          공연은 단순한 이벤트가 아니라 사람들에게 오래 남는 추억과 감동을 만들어 주는 경험이다.
+          그리고 나는 그 경험을 직접 만드는 사람이 되고 싶다.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <footer>
+    <p>© 2025 <strong>나의 엔터 산업 이야기</strong> · 공연·콘서트 기획</p>
+  </footer>
+
+  <script>
+    const reveals = document.querySelectorAll('.reveal');
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
+    }, { threshold: 0.08 });
+    reveals.forEach(el => observer.observe(el));
+  </script>
+</body>
+</html>
